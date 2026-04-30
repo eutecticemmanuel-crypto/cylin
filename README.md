@@ -71,6 +71,19 @@ To enable email notifications:
 3. Generate an app password
 4. Set EMAIL_USER and EMAIL_PASS in .env
 
+## Render Deployment
+
+For Render deployment, create environment variables in the Render service dashboard using the names below. You can use `.env.render` as a local reference template:
+- `PORT`
+- `MONGODB_URI`
+- `SESSION_SECRET`
+- `ADMIN_USERNAME`
+- `ADMIN_PASSWORD`
+- `EMAIL_USER`
+- `EMAIL_PASS`
+
+Use the provided MongoDB Atlas connection string in `MONGODB_URI` and update the credentials to your own values.
+
 ## API Endpoints
 
 ### Authentication
