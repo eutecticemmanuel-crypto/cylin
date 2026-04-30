@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | Cylin Painters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <i class="fas fa-paint-roller"></i>
+        <span>Cylin Painters</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#services" class="nav-link">Services</a></li>
+        <li><a href="/#gallery" class="nav-link">Gallery</a></li>
+        <li><a href="/#about" class="nav-link">About</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/admin" class="nav-link admin-link"><i class="fas fa-cog"></i> Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Registration Section -->
+  <section class="contact" id="register">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Join Our Community</span>
+        <h2 class="section-title">Register for Exclusive Access</h2>
+        <p class="section-desc">Create an account to view our premium products, leave reviews, and get access to pro features.</p>
+      </div>
+
+      <div class="contact-content">
+        <div class="contact-form">
+          <form id="registerForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone">
+              </div>
+              <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="interests">Areas of Interest (optional)</label>
+              <select id="interests" name="interests" multiple>
+                <option value="residential">Residential Painting</option>
+                <option value="commercial">Commercial Painting</option>
+                <option value="interior">Interior Design</option>
+                <option value="exterior">Exterior Work</option>
+                <option value="consultation">Color Consultation</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Account</button>
+          </form>
+          <div id="registerMessage"></div>
+        </div>
+
+        <div class="contact-info">
+          <h3>Already have an account?</h3>
+          <p>Sign in to access your account and view exclusive content.</p>
+          <a href="/login" class="btn btn-outline">Sign In</a>
+
+          <h3 style="margin-top: 2rem;">Benefits of Registration</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> View premium product catalog</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Leave reviews and ratings</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Access to pro features</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Exclusive offers and updates</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/register.js"></script>
+</body>
+</html>

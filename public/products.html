@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Products | Cylin Painters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <i class="fas fa-paint-roller"></i>
+        <span>Cylin Painters</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#services" class="nav-link">Services</a></li>
+        <li><a href="/#gallery" class="nav-link">Gallery</a></li>
+        <li><a href="/#about" class="nav-link">About</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+        <li><a href="/products" class="nav-link active">Products</a></li>
+        <li id="authLinks">
+          <a href="/login" class="nav-link">Login</a>
+          <a href="/register" class="nav-link">Register</a>
+        </li>
+        <li><a href="/admin" class="nav-link admin-link"><i class="fas fa-cog"></i> Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Products Section -->
+  <section class="services" id="products">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Our Products</span>
+        <h2 class="section-title">Premium Painting Supplies & Tools</h2>
+        <p class="section-desc">Discover our curated selection of high-quality paints, tools, and materials for all your painting needs.</p>
+      </div>
+
+      <div class="products-grid" id="productsGrid">
+        <!-- Products will be loaded here -->
+      </div>
+
+      <div class="empty-state" id="productsEmpty" style="display: none;">
+        <i class="fas fa-box"></i>
+        <p>No products available at the moment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reviews Section -->
+  <section class="gallery" id="reviews">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Customer Reviews</span>
+        <h2 class="section-title">What Our Customers Say</h2>
+        <p class="section-desc">Read authentic reviews from our satisfied customers.</p>
+      </div>
+
+      <div class="reviews-grid" id="reviewsGrid">
+        <!-- Reviews will be loaded here -->
+      </div>
+
+      <div class="empty-state" id="reviewsEmpty" style="display: none;">
+        <i class="fas fa-star"></i>
+        <p>No reviews yet. Be the first to leave a review!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Modal -->
+  <div id="productModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <div id="productDetails">
+        <!-- Product details will be loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/products.js"></script>
+</body>
+</html>

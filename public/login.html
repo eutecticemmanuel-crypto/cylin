@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | Cylin Painters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <i class="fas fa-paint-roller"></i>
+        <span>Cylin Painters</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="/" class="nav-link">Home</a></li>
+        <li><a href="/#services" class="nav-link">Services</a></li>
+        <li><a href="/#gallery" class="nav-link">Gallery</a></li>
+        <li><a href="/#about" class="nav-link">About</a></li>
+        <li><a href="/#contact" class="nav-link">Contact</a></li>
+        <li><a href="/products" class="nav-link">Products</a></li>
+        <li><a href="/admin" class="nav-link admin-link"><i class="fas fa-cog"></i> Admin</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Login Section -->
+  <section class="contact" id="login">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Welcome Back</span>
+        <h2 class="section-title">Sign In to Your Account</h2>
+        <p class="section-desc">Access your account to view products, leave reviews, and enjoy pro features.</p>
+      </div>
+
+      <div class="contact-content">
+        <div class="contact-form">
+          <form id="loginForm">
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password *</label>
+              <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign In</button>
+          </form>
+          <div id="loginMessage"></div>
+        </div>
+
+        <div class="contact-info">
+          <h3>Don't have an account?</h3>
+          <p>Join our community to access exclusive content and features.</p>
+          <a href="/register" class="btn btn-outline">Create Account</a>
+
+          <h3 style="margin-top: 2rem;">Member Benefits</h3>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Browse premium products</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Submit reviews and ratings</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Access pro-only features</li>
+            <li style="margin-bottom: 0.5rem;"><i class="fas fa-check text-success"></i> Get personalized recommendations</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/login.js"></script>
+</body>
+</html>
