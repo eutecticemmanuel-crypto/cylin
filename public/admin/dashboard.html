@@ -21,6 +21,8 @@
         <ul>
           <li><a href="#" class="active" data-section="overview"><i class="fas fa-chart-pie"></i> Overview</a></li>
           <li><a href="#" data-section="contacts"><i class="fas fa-envelope"></i> Contacts</a></li>
+          <li><a href="#" data-section="members"><i class="fas fa-users"></i> Members</a></li>
+          <li><a href="#" data-section="announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
           <li><a href="#" data-section="hero"><i class="fas fa-image"></i> Hero Section</a></li>
           <li><a href="#" data-section="services"><i class="fas fa-tools"></i> Services</a></li>
           <li><a href="#" data-section="gallery"><i class="fas fa-images"></i> Gallery</a></li>
@@ -117,6 +119,44 @@
             <div class="empty-state" id="contactsEmpty" style="display:none;">
               <i class="fas fa-inbox"></i>
               <p>No contact submissions yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Members -->
+        <div class="section-panel" id="panel-members">
+          <div class="section-panel-header"><h3>Registered Members</h3></div>
+          <div class="section-panel-body">
+            <div class="table-wrapper">
+              <table class="data-table" id="membersTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Address</th>
+                    <th>Registration Date</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="membersEmpty" style="display:none;">
+              <i class="fas fa-users"></i>
+              <p>No registered members yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="section-panel" id="panel-announcements">
+          <div class="section-panel-header"><h3>Announcements</h3><button class="btn btn-primary btn-sm" onclick="showCreateAnnouncementModal()"><i class="fas fa-plus"></i> New Announcement</button></div>
+          <div class="section-panel-body">
+            <div id="announcementsContainer">
+              <div class="empty-state" id="announcementsEmpty">
+                <i class="fas fa-bullhorn"></i>
+                <p>No announcements yet. Create one to get started!</p>
+              </div>
             </div>
           </div>
         </div>

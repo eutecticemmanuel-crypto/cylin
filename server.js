@@ -11,6 +11,7 @@ const contentRoutes = require('./routes/content');
 const customerRoutes = require('./routes/customer');
 const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,6 +58,7 @@ app.use('/api/content', contentRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Fallback: serve index.html for any non-API route
 app.get('*', (req, res) => {

@@ -577,6 +577,193 @@ function showAddProductModal() {
   if (!description) return;
   const category = prompt('Category:');
   if (!category) return;
+}
+
+// ================= Members Management =================
+async function loadMembers() {
+  try {
+    const res = await fetch('/api/admin/members');
+    const data = await res.json();
+    if (data.success) {
+      renderMembersTable(data.data || []);
+    } else {
+      showMessage('Failed to load members.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+function renderMembersTable(members) {
+  const tbody = document.querySelector('#membersTable tbody');
+  const emptyState = document.getElementById('membersEmpty');
+  
+  if (members.length === 0) {
+    tbody.innerHTML = '';
+    emptyState.style.display = 'flex';
+    return;
+  }
+  
+  emptyState.style.display = 'none';
+  tbody.innerHTML = members.map(member => `
+    <tr>
+      <td>${member.name || 'N/A'}</td>
+      <td>${member.email || 'N/A'}</td>
+      <td>${member.phone || 'N/A'}</td>
+      <td>${member.address || 'N/A'}</td>
+      <td>${new Date(member.createdAt).toLocaleDateString()}</td>
+    </tr>
+  `).join('');
+}
+
+// ================= Announcements Management =================
+async function loadAnnouncements() {
+  try {
+    const res = await fetch('/api/admin/announcements');
+    const data = await res.json();
+    if (data.success) {
+      renderAnnouncementsCards(data.data || []);
+    } else {
+      showMessage('Failed to load announcements.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+function renderAnnouncementsCards(announcements) {
+  const container = document.getElementById('announcementsContainer');
+  const emptyState = document.getElementById('announcementsEmpty');
+  
+  if (announcements.length === 0) {
+    container.innerHTML = '<div class="empty-state" id="announcementsEmpty" style="display:flex;"><i class="fas fa-bullhorn"></i><p>No announcements yet. Create one to get started!</p></div>';
+    return;
+  }
+  
+  container.innerHTML = announcements.map(ann => `
+    <div class="announcement-card" style="border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 15px; background: white;">
+      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+        <div>
+          <h4 style="margin: 0 0 5px 0; color: #333;">${ann.title}</h4>
+          <p style="margin: 0; font-size: 12px; color: #999;">
+            By ${ann.createdBy} • ${new Date(ann.createdAt).toLocaleDateString()}
+          </p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <span class="badge ${ann.status === 'sent' ? 'badge-success' : 'badge-warning'}" style="padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; background: ${ann.status === 'sent' ? '#d4edda' : '#fff3cd'}; color: ${ann.status === 'sent' ? '#155724' : '#856404'};">
+            ${ann.status.charAt(0).toUpperCase() + ann.status.slice(1)}
+          </span>
+        </div>
+      </div>
+      <p style="margin: 10px 0; color: #555; line-height: 1.5;">${ann.message.substring(0, 200)}${ann.message.length > 200 ? '...' : ''}</p>
+      <div style="display: flex; gap: 8px; margin-top: 15px;">
+        ${ann.status === 'draft' ? `
+          <button class="btn btn-primary btn-sm" onclick="editAnnouncement('${ann._id}')"><i class="fas fa-edit"></i> Edit</button>
+          <button class="btn btn-success btn-sm" onclick="sendAnnouncement('${ann._id}')"><i class="fas fa-paper-plane"></i> Send</button>
+        ` : `
+          <span style="color: #28a745; font-size: 12px;">
+            <i class="fas fa-check-circle"></i> Sent to ${ann.recipientCount} member(s)
+          </span>
+        `}
+        <button class="btn btn-danger btn-sm" onclick="deleteAnnouncement('${ann._id}')"><i class="fas fa-trash"></i> Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showCreateAnnouncementModal() {
+  const title = prompt('Announcement Title:');
+  if (!title) return;
+  
+  const message = prompt('Announcement Message (you can use \\n for line breaks):');
+  if (!message) return;
+  
+  createAnnouncement(title, message);
+}
+
+async function createAnnouncement(title, message) {
+  try {
+    const res = await fetch('/api/admin/announcements', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, message })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadAnnouncements();
+      showMessage('Announcement created successfully!', 'success');
+    } else {
+      showMessage(data.error || 'Failed to create announcement.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+async function sendAnnouncement(id) {
+  if (!confirm('Send this announcement to all registered members?')) return;
+  
+  try {
+    const res = await fetch(`/api/admin/announcements/${id}/send`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      loadAnnouncements();
+      showMessage(`✓ Announcement sent to ${data.data.successfulSends} member(s)!`, 'success');
+    } else {
+      showMessage(data.error || 'Failed to send announcement.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+async function editAnnouncement(id) {
+  const title = prompt('Edit Announcement Title:');
+  if (!title) return;
+  
+  const message = prompt('Edit Announcement Message:');
+  if (!message) return;
+  
+  try {
+    const res = await fetch(`/api/admin/announcements/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title, message })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadAnnouncements();
+      showMessage('Announcement updated successfully!', 'success');
+    } else {
+      showMessage(data.error || 'Failed to update announcement.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+async function deleteAnnouncement(id) {
+  if (!confirm('Are you sure you want to delete this announcement?')) return;
+  
+  try {
+    const res = await fetch(`/api/admin/announcements/${id}`, { method: 'DELETE' });
+    const data = await res.json();
+    if (data.success) {
+      loadAnnouncements();
+      showMessage('Announcement deleted successfully!', 'success');
+    } else {
+      showMessage(data.error || 'Failed to delete announcement.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+// Call initial load for members and announcements
+window.addEventListener('DOMContentLoaded', () => {
+  loadMembers();
+  loadAnnouncements();
+});
   const price = parseFloat(prompt('Price:'));
   const isPro = confirm('Is this a Pro feature?');
 

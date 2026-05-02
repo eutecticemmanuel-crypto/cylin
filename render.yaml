@@ -2,22 +2,52 @@ services:
   - type: web
     name: cylin-painters
     env: node
-    branch: main
+    branch: master
     plan: free
     buildCommand: npm install
     startCommand: npm start
     envVars:
+      # Server Configuration
       - key: PORT
         value: "3000"
+      - key: NODE_ENV
+        value: "production"
+      
+      # MongoDB Configuration - Update these with your actual credentials
       - key: MONGODB_URI
-        value: "mongodb+srv://<DB_USER>:<DB_PASSWORD>@cluster0.8fml9ow.mongodb.net/cylin-painters?retryWrites=true&w=majority"
+        fromDatabase:
+          name: cylin-painters-db
+          property: connectionString
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        value: "cylin-painters"
+      
+      # Session & Security - IMPORTANT: Generate secure values
       - key: SESSION_SECRET
-        value: "your-secret-key-here"
+        generateValue: true
+      
+      # Admin Credentials - IMPORTANT: Change these defaults!
       - key: ADMIN_USERNAME
         value: "admin"
       - key: ADMIN_PASSWORD
-        value: "your-secure-password"
+        sync: false
+      
+      # Email Configuration
       - key: EMAIL_USER
-        value: "your-email@gmail.com"
+        sync: false
       - key: EMAIL_PASS
-        value: "your-app-password"
+        sync: false
+      - key: EMAIL_FROM_NAME
+        value: "Cylin Painters"
+      - key: EMAIL_SERVICE
+        value: "gmail"
+      
+      # Application Settings
+      - key: APP_URL
+        value: "https://cylin-painters.onrender.com"
+      - key: CORS_ORIGIN
+        value: "*"
+
