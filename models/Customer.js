@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   phone: { type: String, default: '' },
+  address: { type: String, default: '' },
   interests: [{ type: String }],
   isPro: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }

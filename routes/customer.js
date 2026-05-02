@@ -6,7 +6,7 @@ const router = express.Router();
 
 // POST /api/customers/register
 router.post('/register', async (req, res) => {
-  const { name, email, password, phone, interests } = req.body;
+  const { name, email, password, phone, address, interests } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ success: false, error: 'Name, email, and password are required.' });
@@ -23,6 +23,7 @@ router.post('/register', async (req, res) => {
       email,
       password,
       phone: phone || '',
+      address: address || '',
       interests: interests || []
     });
 

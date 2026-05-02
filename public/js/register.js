@@ -9,6 +9,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     name: formData.get('name'),
     email: formData.get('email'),
     phone: formData.get('phone'),
+    address: formData.get('address'),
     password: formData.get('password'),
     interests
   };
