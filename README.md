@@ -5,23 +5,28 @@ A comprehensive website for Cylin Painters, featuring admin management, customer
 ## Features
 
 ### Admin Features
-- Dashboard for managing website content
-- Contact form submissions management
-- Product and review management
-- Social media links management
-- Content editing (hero, services, gallery, about, etc.)
+- **Dashboard** for managing website content
+- **Contact Form Submissions** management
+- **Members Management** - View all registered customers with details
+- **Announcements System** - Create, manage, and send announcements to members via email
+- **Product and Review Management**
+- **Social Media Links Management**
+- **Content Editing** (hero, services, gallery, about, etc.)
 
 ### Customer Features
-- User registration and authentication
-- Product browsing
-- Review and rating system
-- Pro features access
+- **User Registration** with address field
+- **Authentication** (session-based)
+- **Product Browsing** and discovery
+- **Review and Rating System**
+- **Pro Features Access**
+- **Email Notifications** for announcements and updates
 
 ### General Features
-- Responsive design
-- Contact form with email notifications
-- Dynamic content management
-- Quote request emails
+- **Responsive Design** for all devices
+- **Contact Form** with email notifications
+- **Dynamic Content Management**
+- **Quote Request System** with emails
+- **Announcement Broadcasting** to all registered members
 
 ## Tech Stack
 
@@ -84,7 +89,40 @@ For Render deployment, create environment variables in the Render service dashbo
 
 Use the provided MongoDB Atlas connection string in `MONGODB_URI` and update the credentials to your own values.
 
+## New Features: Admin Announcements & Members Management
+
+### Announcements System
+Admins can now create and send announcements to all registered members:
+
+1. **Create Announcements** - Draft announcements before sending
+2. **Send to Members** - Automatically send via email to all registered customers
+3. **Track Delivery** - See how many members received the announcement
+4. **Edit/Delete** - Modify drafts or remove announcements
+
+### Members Management
+View all registered customers in one dashboard:
+- Customer name, email, phone
+- Address and registration date
+- Quick export capability
+
+### Using These Features
+
+1. Login to Admin Dashboard: `http://localhost:3000/admin`
+2. Click **Members** to view all registered customers
+3. Click **Announcements** to manage and send announcements
+4. Create new announcement → Send to all members
+
+**For detailed setup and configuration instructions, see [SETUP.md](./SETUP.md)**
+
 ## API Endpoints
+
+### Admin Announcements & Members
+- `GET /api/admin/members` - Get all registered members
+- `GET /api/admin/announcements` - Get all announcements
+- `POST /api/admin/announcements` - Create new announcement
+- `PUT /api/admin/announcements/:id` - Update draft announcement
+- `POST /api/admin/announcements/:id/send` - Send announcement to all members
+- `DELETE /api/admin/announcements/:id` - Delete announcement
 
 ### Authentication
 - `POST /api/auth/login` - Admin login
