@@ -118,9 +118,21 @@ function renderProducts() {
     return;
   }
 
-  grid.innerHTML = products.map(product => `
+  grid.innerHTML = products.map(product => {
+    const saved = (window.cylinFavorites && window.cylinFavorites.has && window.cylinFavorites.has(product._id)) ? true : false;
+    return `
     <article class="product-card" onclick="openProductModal('${product._id}')">
       ${product.isPro ? '<div class="pro-badge"><i class="fas fa-star"></i> Pro</div>' : ''}
+
+      <button
+        type="button"
+        class="fav-btn ${saved ? 'saved' : ''}"
+        aria-label="${saved ? 'Remove from favorites' : 'Add to favorites'} ${product.name}"
+        onclick="event.stopPropagation(); window.cylinFavorites.toggle(${JSON.stringify({ _id: product._id, name: product.name, price: product.price, image: product.image, category: product.category })});"
+      >
+        <i class="fas fa-heart"></i>
+      </button>
+
       <div class="product-media">
         ${product.image ? `<img src="${product.image}" alt="${product.name}" loading="lazy">` : '<i class="fas fa-paint-roller"></i>'}
       </div>
@@ -136,16 +148,29 @@ function renderProducts() {
             <span class="price-label">Starting at</span>
             <div class="product-price">$${Number(product.price).toFixed(2)}</div>
           </div>
-          <button type="button" class="icon-action" aria-label="View ${product.name}">
-            <i class="fas fa-arrow-right"></i>
-          </button>
+
+          <div class="product-actions">
+            <button
+              type="button"
+              class="cart-btn"
+              aria-label="Add ${product.name} to cart"
+              onclick="event.stopPropagation(); window.cylinCart.add(${JSON.stringify({ _id: product._id, name: product.name, price: product.price, image: product.image, category: product.category })});"
+            >
+              <i class="fas fa-plus"></i> Add
+            </button>
+            <button type="button" class="icon-action" aria-label="View ${product.name}">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </article>
-  `).join('');
+  `;
+  }).join('');
   grid.style.display = 'grid';
   empty.style.display = 'none';
 }
+
 
 async function loadReviews() {
   try {
