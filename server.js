@@ -12,12 +12,34 @@ const customerRoutes = require('./routes/customer');
 const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const adminRoutes = require('./routes/admin');
+const User = require('./models/User');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+async function ensureDefaultAdmin() {
+  const adminUsername = process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com';
+  const adminPassword = process.env.ADMIN_PASSWORD || 'admin@123';
+  const legacyUsername = 'eutectciemmanuel@gmail.com';
+
+  try {
+    const admin = await User.findOne({ username: adminUsername }) || await User.findOne({ username: legacyUsername });
+    if (admin) {
+      admin.username = adminUsername;
+      admin.password = adminPassword;
+      admin.role = admin.role || 'admin';
+      await admin.save();
+    } else {
+      await User.create({ username: adminUsername, password: adminPassword });
+    }
+    console.log(`Admin account ready: ${adminUsername}`);
+  } catch (error) {
+    console.error(`Admin account setup failed: ${error.message}`);
+  }
+}
+
 // Connect to MongoDB
-connectDB();
+connectDB().then(ensureDefaultAdmin);
 
 // Session middleware
 app.use(session({

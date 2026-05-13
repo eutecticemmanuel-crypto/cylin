@@ -1,10 +1,17 @@
 // Products page functionality
 let currentUser = null;
+let allProducts = [];
+let activeCategory = 'All';
 
 document.addEventListener('DOMContentLoaded', async () => {
   await checkAuth();
   await loadProducts();
   await loadReviews();
+
+  const search = document.getElementById('productSearch');
+  if (search) {
+    search.addEventListener('input', renderProducts);
+  }
 });
 
 async function checkAuth() {
@@ -56,27 +63,88 @@ async function loadProducts() {
     const empty = document.getElementById('productsEmpty');
 
     if (data.success && data.products.length > 0) {
-      grid.innerHTML = data.products.map(product => `
-        <div class="service-card product-card" onclick="openProductModal('${product._id}')">
-          ${product.isPro ? '<div class="pro-badge"><i class="fas fa-star"></i> Pro</div>' : ''}
-          <div class="service-icon">
-            <i class="fas fa-box"></i>
-          </div>
-          <h3>${product.name}</h3>
-          <p>${product.description}</p>
-          <div class="product-price">$${product.price}</div>
-          <span class="product-category">${product.category}</span>
-        </div>
-      `).join('');
+      allProducts = data.products;
+      renderCategoryFilters();
+      renderProducts();
       grid.style.display = 'grid';
       empty.style.display = 'none';
     } else {
+      allProducts = [];
       grid.style.display = 'none';
       empty.style.display = 'block';
     }
   } catch (error) {
     console.error('Failed to load products:', error);
   }
+}
+
+function renderCategoryFilters() {
+  const filters = document.getElementById('categoryFilters');
+  if (!filters) return;
+
+  const categories = ['All', ...new Set(allProducts.map((product) => product.category).filter(Boolean))];
+  filters.innerHTML = categories.map((category) => `
+    <button type="button" class="category-pill ${category === activeCategory ? 'active' : ''}" data-category="${category}">
+      ${category}
+    </button>
+  `).join('');
+
+  filters.querySelectorAll('.category-pill').forEach((button) => {
+    button.addEventListener('click', () => {
+      activeCategory = button.dataset.category;
+      renderCategoryFilters();
+      renderProducts();
+    });
+  });
+}
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const empty = document.getElementById('productsEmpty');
+  const search = document.getElementById('productSearch');
+  const query = search ? search.value.trim().toLowerCase() : '';
+
+  const products = allProducts.filter((product) => {
+    const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
+    const matchesSearch = !query || [product.name, product.description, product.category]
+      .filter(Boolean)
+      .some((value) => value.toLowerCase().includes(query));
+    return matchesCategory && matchesSearch;
+  });
+
+  if (products.length === 0) {
+    grid.style.display = 'none';
+    empty.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = products.map(product => `
+    <article class="product-card" onclick="openProductModal('${product._id}')">
+      ${product.isPro ? '<div class="pro-badge"><i class="fas fa-star"></i> Pro</div>' : ''}
+      <div class="product-media">
+        ${product.image ? `<img src="${product.image}" alt="${product.name}" loading="lazy">` : '<i class="fas fa-paint-roller"></i>'}
+      </div>
+      <div class="product-body">
+        <div class="product-meta">
+          <span class="product-category">${product.category}</span>
+          <span class="stock-badge">Available</span>
+        </div>
+        <h3>${product.name}</h3>
+        <p>${product.description}</p>
+        <div class="product-footer">
+          <div>
+            <span class="price-label">Starting at</span>
+            <div class="product-price">$${Number(product.price).toFixed(2)}</div>
+          </div>
+          <button type="button" class="icon-action" aria-label="View ${product.name}">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  grid.style.display = 'grid';
+  empty.style.display = 'none';
 }
 
 async function loadReviews() {
@@ -121,19 +189,26 @@ async function openProductModal(productId) {
       const details = document.getElementById('productDetails');
 
       details.innerHTML = `
-        <h2>${product.name}</h2>
-        ${product.image ? `<img src="${product.image}" alt="${product.name}" style="max-width: 100%; height: 200px; object-fit: cover; margin-bottom: 1rem;">` : ''}
-        <p><strong>Description:</strong> ${product.description}</p>
-        <p><strong>Category:</strong> ${product.category}</p>
-        <p><strong>Price:</strong> $${product.price}</p>
-        ${product.isPro ? '<p><strong><i class="fas fa-star"></i> Pro Feature</strong></p>' : ''}
+        <div class="modal-product-grid">
+          <div class="modal-product-media">
+            ${product.image ? `<img src="${product.image}" alt="${product.name}">` : '<i class="fas fa-paint-roller"></i>'}
+          </div>
+          <div>
+            <span class="product-category">${product.category}</span>
+            <h2>${product.name}</h2>
+            <p>${product.description}</p>
+            <div class="modal-price">$${Number(product.price).toFixed(2)}</div>
+            ${product.isPro ? '<p class="modal-pro"><i class="fas fa-star"></i> Pro Feature</p>' : ''}
+          </div>
+        </div>
         ${product.features && product.features.length > 0 ? `
-          <p><strong>Features:</strong></p>
-          <ul>${product.features.map(f => `<li>${f}</li>`).join('')}</ul>
+          <div class="feature-list">
+            ${product.features.map(f => `<span><i class="fas fa-check"></i> ${f}</span>`).join('')}
+          </div>
         ` : ''}
 
         ${currentUser ? `
-          <div style="margin-top: 2rem;">
+          <div class="review-form-wrap">
             <h3>Leave a Review</h3>
             <form id="reviewForm">
               <div class="form-group">
@@ -150,12 +225,12 @@ async function openProductModal(productId) {
                 <label>Comment:</label>
                 <textarea id="reviewComment" rows="4" required></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Submit Review</button>
+              <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Review</button>
             </form>
             <div id="reviewMessage"></div>
           </div>
         ` : `
-          <p style="margin-top: 2rem;"><a href="/login">Login</a> to leave a review.</p>
+          <p class="login-review"><a href="/login">Login</a> to leave a review.</p>
         `}
       `;
 

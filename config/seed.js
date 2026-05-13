@@ -177,15 +177,15 @@ async function seedDatabase() {
     }
     console.log('Sample products seeded successfully');
   // Seed admin user
-    const existingAdmin = await User.findOne({ username: process.env.ADMIN_USERNAME || 'eutectciemmanuel@gmail.com' });
+    const existingAdmin = await User.findOne({ username: process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com' });
     if (!existingAdmin) {
       await User.create({
-        username: process.env.ADMIN_USERNAME || 'eutectciemmanuel@gmail.com',
-        password: process.env.ADMIN_PASSWORD || 'St!lla18'
+        username: process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com',
+        password: process.env.ADMIN_PASSWORD || 'admin@123'
       });
       console.log('Admin user created successfully');
-      console.log(`Username: ${process.env.ADMIN_USERNAME || 'eutectciemmanuel@gmail.com'}`);
-      console.log(`Password: ${process.env.ADMIN_PASSWORD || 'St!lla18'}`);
+      console.log(`Username: ${process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com'}`);
+      console.log(`Password: ${process.env.ADMIN_PASSWORD || 'admin@123'}`);
     } else {
       console.log('Admin user already exists');
     }

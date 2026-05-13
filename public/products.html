@@ -39,28 +39,74 @@
     </div>
   </nav>
 
-  <!-- Products Section -->
-  <section class="services" id="products">
-    <div class="container">
-      <div class="section-header">
-        <span class="section-tag">Our Products</span>
-        <h2 class="section-title">Premium Painting Supplies & Tools</h2>
-        <p class="section-desc">Discover our curated selection of high-quality paints, tools, and materials for all your painting needs.</p>
+  <main class="storefront">
+    <section class="store-hero">
+      <div class="container store-hero-grid">
+        <div class="store-hero-copy">
+          <span class="section-tag">Cylin Store</span>
+          <h1>Professional painting supplies for cleaner, faster finishes</h1>
+          <p>Shop premium paints, tools, and service packages selected for residential and commercial painting projects.</p>
+          <div class="store-hero-actions">
+            <a href="#products" class="btn btn-primary"><i class="fas fa-bag-shopping"></i> Shop Products</a>
+            <a href="/#contact" class="btn btn-outline"><i class="fas fa-phone"></i> Request a Quote</a>
+          </div>
+        </div>
+        <div class="store-hero-panel" aria-label="Featured store benefits">
+          <div class="store-metric">
+            <strong>Premium</strong>
+            <span>Paints and tools</span>
+          </div>
+          <div class="store-metric">
+            <strong>Pro</strong>
+            <span>Contractor-grade picks</span>
+          </div>
+          <div class="store-metric">
+            <strong>Fast</strong>
+            <span>Easy quote support</span>
+          </div>
+        </div>
       </div>
+    </section>
 
-      <div class="products-grid" id="productsGrid">
-        <!-- Products will be loaded here -->
+    <section class="store-trust">
+      <div class="container trust-grid">
+        <div><i class="fas fa-shield-alt"></i><span>Quality checked supplies</span></div>
+        <div><i class="fas fa-headset"></i><span>Project guidance available</span></div>
+        <div><i class="fas fa-star"></i><span>Reviewed by customers</span></div>
+        <div><i class="fas fa-paint-roller"></i><span>Built for painters</span></div>
       </div>
+    </section>
 
-      <div class="empty-state" id="productsEmpty" style="display: none;">
-        <i class="fas fa-box"></i>
-        <p>No products available at the moment.</p>
+    <section class="products-section" id="products">
+      <div class="container">
+        <div class="store-section-top">
+          <div>
+            <span class="section-tag">Our Products</span>
+            <h2 class="section-title">Premium Painting Supplies & Tools</h2>
+            <p class="section-desc">Discover high-quality paints, tools, and materials for your next painting job.</p>
+          </div>
+          <div class="store-controls">
+            <label class="store-search">
+              <i class="fas fa-search"></i>
+              <input type="search" id="productSearch" placeholder="Search products">
+            </label>
+            <div class="category-pills" id="categoryFilters"></div>
+          </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+          <!-- Products will be loaded here -->
+        </div>
+
+        <div class="empty-state" id="productsEmpty" style="display: none;">
+          <i class="fas fa-box"></i>
+          <p>No products available at the moment.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
   <!-- Reviews Section -->
-  <section class="gallery" id="reviews">
+  <section class="reviews-section" id="reviews">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Customer Reviews</span>
@@ -82,12 +128,13 @@
   <!-- Product Modal -->
   <div id="productModal" class="modal" style="display: none;">
     <div class="modal-content">
-      <span class="close" onclick="closeModal()">&times;</span>
+      <button type="button" class="close" onclick="closeModal()" aria-label="Close product details"><i class="fas fa-times"></i></button>
       <div id="productDetails">
         <!-- Product details will be loaded here -->
       </div>
     </div>
   </div>
+  </main>
 
   <script src="js/products.js"></script>
 </body>
