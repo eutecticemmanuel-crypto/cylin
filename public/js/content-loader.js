@@ -132,6 +132,31 @@
         if (infoCards[2] && content.contact.info.email) infoCards[2].innerHTML = content.contact.info.email.replace(/\n/g, '<br>');
       }
 
+      // Social Media
+      if (content.social) {
+        const socialLinks = document.querySelector('.social-links');
+        if (socialLinks) {
+          const socialMap = [
+            { key: 'facebook', label: 'Facebook', icon: 'fa-facebook-f' },
+            { key: 'instagram', label: 'Instagram', icon: 'fa-instagram' },
+            { key: 'twitter', label: 'Twitter', icon: 'fa-twitter' },
+            { key: 'linkedin', label: 'LinkedIn', icon: 'fa-linkedin-in' },
+            { key: 'youtube', label: 'YouTube', icon: 'fa-youtube' },
+            { key: 'whatsapp', label: 'WhatsApp', icon: 'fa-whatsapp' },
+            { key: 'tiktok', label: 'TikTok', icon: 'fa-tiktok' },
+            { key: 'pinterest', label: 'Pinterest', icon: 'fa-pinterest-p' },
+          ];
+
+          socialLinks.innerHTML = socialMap
+            .filter((item) => content.social[item.key])
+            .map((item) => `
+              <a href="${content.social[item.key]}" aria-label="${item.label}" target="_blank" rel="noopener">
+                <i class="fab ${item.icon}"></i>
+              </a>
+            `).join('');
+        }
+      }
+
       // Footer
       if (content.footer) {
         const footerDesc = document.querySelector('[data-content="footer.description"]');

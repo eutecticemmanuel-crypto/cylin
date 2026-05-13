@@ -127,6 +127,9 @@ function populateAllForms() {
     document.getElementById('social-instagram').value = siteContent.social.instagram || '';
     document.getElementById('social-linkedin').value = siteContent.social.linkedin || '';
     document.getElementById('social-youtube').value = siteContent.social.youtube || '';
+    document.getElementById('social-tiktok').value = siteContent.social.tiktok || '';
+    document.getElementById('social-pinterest').value = siteContent.social.pinterest || '';
+    document.getElementById('social-whatsapp').value = siteContent.social.whatsapp || '';
   }
 }
 
@@ -285,6 +288,11 @@ function showSection(section) {
     about: 'Edit About Section',
     stats: 'Edit Stats Section',
     contact: 'Edit Contact Info',
+    social: 'Edit Social Media',
+    products: 'Manage Products',
+    reviews: 'Manage Reviews',
+    members: 'Registered Members',
+    announcements: 'Announcements',
     footer: 'Edit Footer',
   };
   document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
@@ -391,6 +399,9 @@ async function saveSection(section) {
       instagram: document.getElementById('social-instagram').value,
       linkedin: document.getElementById('social-linkedin').value,
       youtube: document.getElementById('social-youtube').value,
+      tiktok: document.getElementById('social-tiktok').value,
+      pinterest: document.getElementById('social-pinterest').value,
+      whatsapp: document.getElementById('social-whatsapp').value,
     };
   }
 
@@ -577,6 +588,10 @@ function showAddProductModal() {
   if (!description) return;
   const category = prompt('Category:');
   if (!category) return;
+  const price = parseFloat(prompt('Price:'));
+  const isPro = confirm('Is this a Pro feature?');
+
+  addProduct({ name, description, category, price, isPro });
 }
 
 // ================= Members Management =================
@@ -764,11 +779,6 @@ window.addEventListener('DOMContentLoaded', () => {
   loadMembers();
   loadAnnouncements();
 });
-  const price = parseFloat(prompt('Price:'));
-  const isPro = confirm('Is this a Pro feature?');
-
-  addProduct({ name, description, category, price, isPro });
-}
 
 async function addProduct(product) {
   try {

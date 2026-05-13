@@ -84,9 +84,9 @@ const defaultContent = [
       title: 'Request a Free Quote',
       description: 'Ready to transform your space? Fill out the form below and we\'ll get back to you within 24 hours.',
       info: {
-        address: '123 Color Avenue\nDesign District, NY 10001',
-        phone: '(555) 123-4567\nMon - Sat: 8am - 6pm',
-        email: 'info@cylinpainters.com\nquotes@cylinpainters.com'
+        address: 'Kampala, Uganda',
+        phone: '0700892678\nWhatsApp: 0700892678',
+        email: 'mukiibif00@gmail.com'
       }
     }
   },
@@ -100,11 +100,14 @@ const defaultContent = [
   {
     section: 'social',
     data: {
-      facebook: 'https://facebook.com/cylinpainters',
-      twitter: 'https://twitter.com/cylinpainters',
-      instagram: 'https://instagram.com/cylinpainters',
-      linkedin: 'https://linkedin.com/company/cylinpainters',
-      youtube: 'https://youtube.com/c/cylinpainters'
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      linkedin: '',
+      youtube: '',
+      tiktok: 'https://www.tiktok.com/@painterfrank.mukiibi',
+      pinterest: 'https://pin.it/2reyO8vPo',
+      whatsapp: 'https://wa.me/256700892678'
     }
   }
 ];
