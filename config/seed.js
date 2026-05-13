@@ -4,6 +4,7 @@ const connectDB = require('./db');
 const SiteContent = require('../models/SiteContent');
 const User = require('../models/User');
 const Product = require('../models/Product');
+const adminCredentials = require('./adminCredentials');
 
 const defaultContent = [
   {
@@ -177,17 +178,22 @@ async function seedDatabase() {
     }
     console.log('Sample products seeded successfully');
   // Seed admin user
-    const existingAdmin = await User.findOne({ username: process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com' });
+    const existingAdmin = await User.findOne({
+      username: { $in: [adminCredentials.username, ...adminCredentials.legacyUsernames] },
+    });
     if (!existingAdmin) {
       await User.create({
-        username: process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com',
-        password: process.env.ADMIN_PASSWORD || 'admin@123'
+        username: adminCredentials.username,
+        password: adminCredentials.password
       });
       console.log('Admin user created successfully');
-      console.log(`Username: ${process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com'}`);
-      console.log(`Password: ${process.env.ADMIN_PASSWORD || 'admin@123'}`);
+      console.log(`Username: ${adminCredentials.username}`);
+      console.log(`Password: ${adminCredentials.password}`);
     } else {
-      console.log('Admin user already exists');
+      existingAdmin.username = adminCredentials.username;
+      existingAdmin.password = adminCredentials.password;
+      await existingAdmin.save();
+      console.log('Admin user updated successfully');
     }
 
     console.log('Database seeding completed');

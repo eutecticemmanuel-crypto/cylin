@@ -13,26 +13,29 @@ const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const adminRoutes = require('./routes/admin');
 const User = require('./models/User');
+const adminCredentials = require('./config/adminCredentials');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 async function ensureDefaultAdmin() {
-  const adminUsername = process.env.ADMIN_USERNAME || 'mukiibif00@gmail.com';
-  const adminPassword = process.env.ADMIN_PASSWORD || 'admin@123';
-  const legacyUsername = 'eutectciemmanuel@gmail.com';
-
   try {
-    const admin = await User.findOne({ username: adminUsername }) || await User.findOne({ username: legacyUsername });
+    const admin = await User.findOne({
+      username: { $in: [adminCredentials.username, ...adminCredentials.legacyUsernames] },
+    });
+
     if (admin) {
-      admin.username = adminUsername;
-      admin.password = adminPassword;
+      admin.username = adminCredentials.username;
+      admin.password = adminCredentials.password;
       admin.role = admin.role || 'admin';
       await admin.save();
     } else {
-      await User.create({ username: adminUsername, password: adminPassword });
+      await User.create({
+        username: adminCredentials.username,
+        password: adminCredentials.password,
+      });
     }
-    console.log(`Admin account ready: ${adminUsername}`);
+    console.log(`Admin account ready: ${adminCredentials.username}`);
   } catch (error) {
     console.error(`Admin account setup failed: ${error.message}`);
   }
