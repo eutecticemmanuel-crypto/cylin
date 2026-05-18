@@ -114,8 +114,6 @@ const defaultContent = [
 ];
 
 async function seedDatabase() {
-  await connectDB();
-
   try {
     // Seed site content
     for (const content of defaultContent) {
@@ -199,13 +197,13 @@ async function seedDatabase() {
     console.log('Database seeding completed');
   } catch (error) {
     console.error('Seeding error:', error);
-  } finally {
-    mongoose.connection.close();
   }
 }
 
 if (require.main === module) {
-  seedDatabase();
+  connectDB()
+    .then(seedDatabase)
+    .finally(() => mongoose.connection.close());
 }
 
 module.exports = seedDatabase;

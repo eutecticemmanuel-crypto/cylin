@@ -3,8 +3,10 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const path = require('path');
 const connectDB = require('./config/db');
+const seedDatabase = require('./config/seed');
 const contactRoutes = require('./routes/contact');
 const authRoutes = require('./routes/auth');
 const contentRoutes = require('./routes/content');
@@ -43,12 +45,23 @@ async function ensureDefaultAdmin() {
   }
 }
 
-// Connect to MongoDB
-connectDB().then(ensureDefaultAdmin);
+// Connect to MongoDB and ensure sample data is seeded
+connectDB()
+  .then(async () => {
+    await ensureDefaultAdmin();
+    await seedDatabase();
+  })
+  .catch((err) => {
+    console.error('Startup error:', err);
+  });
 
 // Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret',
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/cylin',
+    ttl: 60 * 60 * 24, // 1 day
+  }),
   resave: false,
   saveUninitialized: false,
   cookie: {

@@ -42,10 +42,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.location.href = 'index.html';
   });
 
-  // Load contacts
+  // Load initial data sets
   loadContacts();
   loadProducts();
   loadReviews();
+  loadOrders();
+  loadSubscribers();
+  loadMembers();
 });
 
 async function loadContent() {
@@ -298,6 +301,13 @@ function showSection(section) {
     footer: 'Edit Footer',
   };
   document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard';
+
+  if (section === 'contacts') loadContacts();
+  if (section === 'products') loadProducts();
+  if (section === 'orders') loadOrders();
+  if (section === 'subscribers') loadSubscribers();
+  if (section === 'members') loadMembers();
+  if (section === 'reviews') loadReviews();
 }
 
 function updateOverviewStats() {

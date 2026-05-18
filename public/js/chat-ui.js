@@ -1,6 +1,7 @@
 // Cylin Painters - AI Assistant UI (front-end only)
 
 let chatTypingTimer = null;
+const chatHistory = [];
 
 function setButtonLoading(btn, loading) {
   if (!btn) return;
@@ -19,15 +20,16 @@ function appendMessage({ role, text }) {
   `;
   messagesEl.appendChild(msg);
   messagesEl.scrollTop = messagesEl.scrollHeight;
+  chatHistory.push({ role, text });
   return msg;
 }
 
 function escapeHtml(str) {
   return String(str)
     .replaceAll('&', '&amp;')
-    .replaceAll('<', '<')
-    .replaceAll('>', '>')
-    .replaceAll('"', '"')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 }
 
@@ -76,6 +78,7 @@ function handleSend() {
 
   const loadingReply = getAssistantReply(prompt);
   setButtonLoading(sendBtn, true);
+  chatHistory.push({ role: 'assistant', text: loadingReply });
 
   // streaming
   fakeStreamToElement(bubble, loadingReply);
@@ -88,22 +91,37 @@ function handleSend() {
 
 function getAssistantReply(prompt) {
   const p = prompt.toLowerCase();
+  const lastUser = chatHistory.filter((m) => m.role === 'user').slice(-2)[0]?.text.toLowerCase() || '';
 
-  // Lightweight canned responses to feel "smart" without backend.
-  if (p.includes('blue') || p.includes('navy') || p.includes('teal')) {
-    return "For blue-toned rooms, look for paintings with soft neutrals and balanced contrast. Try warm accents—cream, sand, or muted terracotta—so the space feels inviting rather than cold.";
-  }
-  if (p.includes('warm') || p.includes('beige') || p.includes('cream') || p.includes('tan')) {
-    return "Warm rooms pair beautifully with art that adds depth: rich browns, gentle reds, or textured landscapes. Choose pieces with a little variation in tone so your walls feel layered and dynamic.";
-  }
-  if (p.includes('modern') || p.includes('minimal') || p.includes('scandinavian')) {
-    return "Modern interiors usually love clean composition and restrained palettes. Select artwork with bold negative space and a limited color range—then let one accent color do the talking.";
-  }
-  if (p.includes('size') || p.includes('wall') || p.includes('height')) {
-    return "Quick sizing rule: art width should be about 2/3 to 3/4 of the furniture or wall space it’s meant to balance. If it’s above a sofa, center it and keep the bottom edge roughly 8–10 inches from the top of the furniture.";
+  if (/thank|thanks|great|cool|nice/.test(p)) {
+    return "Happy to help! If you want, ask me to compare two paint colors, pick an accent wall, or recommend a layout for your space.";
   }
 
-  return "Here’s a great starting point: tell me your room color (or share a vibe like modern, cozy, or luxury). I’ll suggest paintings that match your palette and style, and recommend the best placement size.";
+  if (/wall|size|space|above my sofa|above the sofa/.test(p)) {
+    return "For wall art size, try choosing a piece that's about 2/3 of the width of the furniture below it. Keep the bottom edge 8–10 inches above a sofa or console for balanced placement.";
+  }
+
+  if (/modern|minimal|scandinavian|contemporary/.test(p)) {
+    return "Modern rooms work well with art that has clean lines, a calm palette, and a strong focal point. Consider neutral backgrounds with one accent color for depth.";
+  }
+
+  if (/warm|beige|cream|tan|earthy/.test(p)) {
+    return "Warm spaces look great with pieces that include soft terracotta, muted gold, and creamy neutrals. A textured abstract or landscape can bring warmth without feeling too busy.";
+  }
+
+  if (/blue|navy|teal|aqua/.test(p)) {
+    return "Blue tones pair beautifully with ivory, warm wood, and gentle brass accents. Choose artwork with subtle warm highlights so the room feels balanced and inviting.";
+  }
+
+  if (/paint|finish|wall paint|interior paint|exterior paint/.test(p)) {
+    return "For paint, pick a finish based on the room: eggshell for living spaces, satin for trim and doors, and semi-gloss for kitchens or bathrooms that need easy cleaning.";
+  }
+
+  if (/follow|next|more|also/.test(p) && lastUser) {
+    return "Great, tell me more about the space or the mood you're going for, and I can refine the recommendation.";
+  }
+
+  return "I’m here to help with colors and room style. Tell me your room type, current wall color, or the style you want (cozy, modern, luxury), and I’ll suggest the best painting or finish.";
 }
 
 function initChatUI() {
