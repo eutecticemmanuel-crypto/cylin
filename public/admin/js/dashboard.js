@@ -180,6 +180,7 @@ function renderItemCard(section, index, item) {
         </div>
         <div class="item-card-grid">
           <div class="form-group"><label>Image URL</label><input type="text" class="gal-src" value="${item.src || ''}"></div>
+          <div class="form-group"><label>Image File</label><input type="file" class="gal-file" accept="image/*"></div>
           <div class="form-group"><label>Title</label><input type="text" class="gal-title" value="${item.title || ''}"></div>
           <div class="form-group"><label>Category</label><input type="text" class="gal-category" value="${item.category || ''}"></div>
         </div>
@@ -348,13 +349,23 @@ async function saveSection(section) {
     };
   } else if (section === 'gallery') {
     const items = [];
-    document.querySelectorAll('#gallery-items-list .item-card').forEach((card) => {
+    for (const card of document.querySelectorAll('#gallery-items-list .item-card')) {
+      let src = card.querySelector('.gal-src').value;
+      const fileInput = card.querySelector('.gal-file');
+      if (fileInput?.files?.[0]) {
+        const uploadResult = await uploadImageFile(fileInput.files[0]);
+        if (!uploadResult.success) {
+          showMessage(uploadResult.error || 'Gallery image upload failed.', 'error');
+          return;
+        }
+        src = uploadResult.url;
+      }
       items.push({
-        src: card.querySelector('.gal-src').value,
+        src,
         title: card.querySelector('.gal-title').value,
         category: card.querySelector('.gal-category').value,
       });
-    });
+    }
     payload = {
       tag: document.getElementById('gallery-tag').value,
       title: document.getElementById('gallery-title').value,
@@ -366,12 +377,22 @@ async function saveSection(section) {
     document.querySelectorAll('#about-features .about-feature').forEach((input) => {
       features.push(input.value);
     });
+    let imageUrl = document.getElementById('about-image').value;
+    const imageFileInput = document.getElementById('about-image-file');
+    if (imageFileInput?.files?.[0]) {
+      const uploadResult = await uploadImageFile(imageFileInput.files[0]);
+      if (!uploadResult.success) {
+        showMessage(uploadResult.error || 'About image upload failed.', 'error');
+        return;
+      }
+      imageUrl = uploadResult.url;
+    }
     payload = {
       tag: document.getElementById('about-tag').value,
       title: document.getElementById('about-title').value,
       description: document.getElementById('about-description').value,
       description2: document.getElementById('about-description2').value,
-      image: document.getElementById('about-image').value,
+      image: imageUrl,
       experience: {
         number: document.getElementById('about-experience-number').value,
         text: document.getElementById('about-experience-text').value,
@@ -770,7 +791,7 @@ async function deleteReview(id) {
   }
 }
 
-function showAddProductModal() {
+async function showAddProductModal() {
   // Simple prompt for now - could be enhanced with a modal
   const name = prompt('Product Name:');
   if (!name) return;
@@ -778,10 +799,23 @@ function showAddProductModal() {
   if (!description) return;
   const category = prompt('Category:');
   if (!category) return;
-  const price = parseFloat(prompt('Price:'));
+  const price = parseFloat(prompt('Price:')) || 0;
+  let image = prompt('Image URL (optional):');
+  if (image === null) return;
+  if (!image && confirm('Upload a local image file instead?')) {
+    const file = await pickImageFile();
+    if (file) {
+      const uploadResult = await uploadImageFile(file);
+      if (!uploadResult.success) {
+        showMessage(uploadResult.error || 'Image upload failed.', 'error');
+        return;
+      }
+      image = uploadResult.url;
+    }
+  }
   const isPro = confirm('Is this a Pro feature?');
 
-  addProduct({ name, description, category, price, isPro });
+  addProduct({ name, description, category, price, image, isPro });
 }
 
 // ================= Members Management =================
@@ -1011,7 +1045,18 @@ async function editProduct(id) {
     if (category === null) return;
 
     const price = parseFloat(prompt('Price:', product.price)) || 0;
-    const image = prompt('Image URL (optional):', product.image) || '';
+    let image = prompt('Image URL (optional):', product.image) || '';
+    if (confirm('Upload a local image file instead of a URL?')) {
+      const file = await pickImageFile();
+      if (file) {
+        const uploadResult = await uploadImageFile(file);
+        if (!uploadResult.success) {
+          showMessage(uploadResult.error || 'Image upload failed.', 'error');
+          return;
+        }
+        image = uploadResult.url;
+      }
+    }
     const isPro = confirm('Mark as Pro feature?');
 
     const payload = {
@@ -1050,6 +1095,34 @@ function showMessage(text, type) {
     msg.className = 'message';
     msg.textContent = '';
   }, 4000);
+}
+
+async function uploadImageFile(file) {
+  try {
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData,
+    });
+    const data = await res.json();
+    if (!data.success) {
+      return { success: false, error: data.error || 'Upload failed.' };
+    }
+    return { success: true, url: data.url };
+  } catch (err) {
+    return { success: false, error: err.message || 'Upload failed.' };
+  }
+}
+
+function pickImageFile() {
+  return new Promise((resolve) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = () => resolve(input.files[0] || null);
+    input.click();
+  });
 }
 
 function escapeHtml(str) {
