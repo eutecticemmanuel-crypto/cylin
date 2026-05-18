@@ -48,6 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   loadReviews();
   loadOrders();
   loadSubscribers();
+  loadQuoteRequests();
   loadMembers();
 });
 
@@ -295,6 +296,7 @@ function showSection(section) {
     products: 'Manage Products',
     orders: 'Manage Orders',
     subscribers: 'Newsletter Subscribers',
+    quotes: 'AI Quote Requests',
     reviews: 'Manage Reviews',
     members: 'Registered Members',
     announcements: 'Announcements',
@@ -306,10 +308,7 @@ function showSection(section) {
   if (section === 'products') loadProducts();
   if (section === 'orders') loadOrders();
   if (section === 'subscribers') loadSubscribers();
-  if (section === 'members') loadMembers();
-  if (section === 'reviews') loadReviews();
-}
-
+    if (section === 'quotes') loadQuoteRequests();
 function updateOverviewStats() {
   const contacts = siteContent.contacts?.length || 0;
   const services = siteContent.services?.items?.length || 0;
@@ -556,6 +555,108 @@ async function loadSubscribers() {
     }
   } catch {
     showMessage('Failed to load subscribers.', 'error');
+  }
+}
+
+async function loadQuoteRequests() {
+  try {
+    const res = await fetch('/api/quotes/admin');
+    const data = await res.json();
+    const tbody = document.querySelector('#quotesTable tbody');
+    const empty = document.getElementById('quotesEmpty');
+
+    if (data.success && data.quotes.length > 0) {
+      tbody.innerHTML = data.quotes.map((quote) => `
+        <tr data-id="${quote._id}">
+          <td>${escapeHtml(quote.prompt.substring(0, 80))}${quote.prompt.length > 80 ? '…' : ''}</td>
+          <td>${escapeHtml(quote.quote.substring(0, 120))}${quote.quote.length > 120 ? '…' : ''}</td>
+          <td>${escapeHtml(quote.memberName || quote.memberEmail || 'AI Visitor')}</td>
+          <td>${escapeHtml(quote.status)}</td>
+          <td>${new Date(quote.createdAt).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="updateQuoteStatus('${quote._id}', 'reviewed')">Review</button>
+            <button class="btn btn-outline btn-sm" onclick="updateQuoteStatus('${quote._id}', 'closed')">Close</button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('quotesTable').style.display = 'table';
+      empty.style.display = 'none';
+    } else {
+      document.getElementById('quotesTable').style.display = 'none';
+      empty.style.display = 'block';
+    }
+  } catch {
+    showMessage('Failed to load AI quote requests.', 'error');
+  }
+}
+
+async function updateQuoteStatus(id, status) {
+  try {
+    const res = await fetch('/api/quotes/' + id + '/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadQuoteRequests();
+      showMessage('Quote status updated.', 'success');
+    } else {
+      showMessage(data.error || 'Failed to update quote.', 'error');
+    }
+  } catch {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+async function loadQuoteRequests() {
+  try {
+    const res = await fetch('/api/quotes/admin');
+    const data = await res.json();
+    const tbody = document.querySelector('#quotesTable tbody');
+    const empty = document.getElementById('quotesEmpty');
+
+    if (data.success && data.quotes.length > 0) {
+      tbody.innerHTML = data.quotes.map((quote) => `
+        <tr data-id="${quote._id}">
+          <td>${escapeHtml(quote.prompt.substring(0, 80))}${quote.prompt.length > 80 ? '…' : ''}</td>
+          <td>${escapeHtml(quote.quote.substring(0, 100))}${quote.quote.length > 100 ? '…' : ''}</td>
+          <td>${escapeHtml(quote.memberName || quote.memberEmail || 'AI Visitor')}</td>
+          <td>${escapeHtml(quote.status)}</td>
+          <td>${new Date(quote.createdAt).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="updateQuoteStatus('${quote._id}', 'reviewed')">Review</button>
+            <button class="btn btn-outline btn-sm" onclick="updateQuoteStatus('${quote._id}', 'closed')">Close</button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('quotesTable').style.display = 'table';
+      empty.style.display = 'none';
+    } else {
+      document.getElementById('quotesTable').style.display = 'none';
+      empty.style.display = 'block';
+    }
+  } catch {
+    showMessage('Failed to load AI quote requests.', 'error');
+  }
+}
+
+async function updateQuoteStatus(id, status) {
+  try {
+    const res = await fetch('/api/quotes/' + id + '/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadQuoteRequests();
+      showMessage('Quote status updated.', 'success');
+    } else {
+      showMessage(data.error || 'Failed to update quote.', 'error');
+    }
+  } catch {
+    showMessage('Connection error.', 'error');
   }
 }
 

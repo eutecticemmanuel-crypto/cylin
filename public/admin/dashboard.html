@@ -33,6 +33,7 @@
           <li><a href="#" data-section="products"><i class="fas fa-box"></i> Products</a></li>
           <li><a href="#" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
           <li><a href="#" data-section="subscribers"><i class="fas fa-envelope-open-text"></i> Subscribers</a></li>
+          <li><a href="#" data-section="quotes"><i class="fas fa-file-invoice-dollar"></i> AI Quote Requests</a></li>
           <li><a href="#" data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
           <li><a href="#" data-section="footer"><i class="fas fa-shoe-prints"></i> Footer</a></li>
         </ul>
@@ -354,6 +355,32 @@
             <div class="empty-state" id="subscribersEmpty">
               <i class="fas fa-envelope-open-text"></i>
               <p>No subscribers yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Quote Requests -->
+        <div class="section-panel" id="panel-quotes">
+          <div class="section-panel-header"><h3>AI Quote Requests</h3></div>
+          <div class="section-panel-body">
+            <div class="table-wrapper">
+              <table class="data-table" id="quotesTable">
+                <thead>
+                  <tr>
+                    <th>Prompt</th>
+                    <th>Quote</th>
+                    <th>Member</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="quotesEmpty">
+              <i class="fas fa-file-invoice-dollar"></i>
+              <p>No AI quote requests yet.</p>
             </div>
           </div>
         </div>

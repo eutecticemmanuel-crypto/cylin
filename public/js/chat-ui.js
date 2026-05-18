@@ -80,6 +80,11 @@ function handleSend() {
   setButtonLoading(sendBtn, true);
   chatHistory.push({ role: 'assistant', text: loadingReply });
 
+  // Notify admin when the AI generates a quote request.
+  if (isQuoteRequest(prompt)) {
+    notifyAdminQuote(prompt, loadingReply);
+  }
+
   // streaming
   fakeStreamToElement(bubble, loadingReply);
 
@@ -122,6 +127,22 @@ function getAssistantReply(prompt) {
   }
 
   return "I’m here to help with colors and room style. Tell me your room type, current wall color, or the style you want (cozy, modern, luxury), and I’ll suggest the best painting or finish.";
+}
+
+function isQuoteRequest(prompt) {
+  return /quote|estimate|pricing|cost|how much|need a quote|get a quote|price quote|estimate for/i.test(prompt);
+}
+
+async function notifyAdminQuote(prompt, quote) {
+  try {
+    await fetch('/api/quotes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt, quote })
+    });
+  } catch (err) {
+    console.warn('Unable to notify admin about AI quote request:', err);
+  }
 }
 
 function initChatUI() {
