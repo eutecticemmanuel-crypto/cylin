@@ -3,7 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const MongoStore = require('connect-mongo');
+const mongoStoreModule = require('connect-mongo');
+const MongoStore = mongoStoreModule.default || mongoStoreModule;
 const path = require('path');
 const connectDB = require('./config/db');
 const seedDatabase = require('./config/seed');
@@ -63,12 +64,31 @@ async function startApp() {
 }
 
 // Session middleware
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'default-secret',
-  store: new MongoStore({
+let sessionStore;
+try {
+  // Try constructor first (v5.x and v6.x pattern)
+  sessionStore = new MongoStore({
     mongoUrl: MONGO_URI,
     ttl: 60 * 60 * 24, // 1 day
-  }),
+  });
+} catch (err) {
+  console.warn('MongoStore constructor failed, trying .create() method:', err.message);
+  try {
+    // Fallback to .create() if constructor fails
+    sessionStore = MongoStore.create({
+      mongoUrl: MONGO_URI,
+      ttl: 60 * 60 * 24, // 1 day
+    });
+  } catch (err2) {
+    console.warn('MongoStore.create() also failed, using memory store:', err2.message);
+    // Will use default express-session memory store
+    sessionStore = undefined;
+  }
+}
+
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'default-secret',
+  store: sessionStore,
   resave: false,
   saveUninitialized: false,
   cookie: {
