@@ -35,9 +35,41 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  /* ---------- Contrast toggle ---------- */
+  const contrastToggle = document.getElementById('contrastToggle');
+  if (contrastToggle) {
+    const STORAGE_KEY = 'cylin.a11y.contrast.v1';
+
+    const applyContrast = (enabled) => {
+      document.body.classList.toggle('theme-contrast', enabled);
+      contrastToggle.setAttribute('aria-pressed', enabled ? 'true' : 'false');
+    };
+
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const enabled = raw === '1';
+      applyContrast(enabled);
+    } catch {
+      // ignore
+    }
+
+    contrastToggle.addEventListener('click', () => {
+      const enabled = !document.body.classList.contains('theme-contrast');
+      applyContrast(enabled);
+      try {
+        localStorage.setItem(STORAGE_KEY, enabled ? '1' : '0');
+      } catch {
+        // ignore
+      }
+    });
+  }
+
+
   /* ---------- Scroll spy ---------- */
   const sections = document.querySelectorAll('section[id]');
+
   const navLinks = document.querySelectorAll('.nav-link');
+
 
   function onScroll() {
     const scrollPos = window.scrollY + 100;
