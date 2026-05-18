@@ -2,6 +2,7 @@
 let currentUser = null;
 let allProducts = [];
 let activeCategory = 'All';
+let proOnly = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
   await checkAuth();
@@ -11,6 +12,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   const search = document.getElementById('productSearch');
   if (search) {
     search.addEventListener('input', renderProducts);
+  }
+
+  const proFilterBtn = document.getElementById('proFilterBtn');
+  if (proFilterBtn) {
+    proFilterBtn.addEventListener('click', () => {
+      proOnly = !proOnly;
+      proFilterBtn.classList.toggle('active', proOnly);
+      renderProducts();
+    });
   }
 });
 
@@ -96,6 +106,11 @@ function renderCategoryFilters() {
       renderProducts();
     });
   });
+
+  const proFilterBtn = document.getElementById('proFilterBtn');
+  if (proFilterBtn) {
+    proFilterBtn.classList.toggle('active', proOnly);
+  }
 }
 
 function renderProducts() {
@@ -106,10 +121,11 @@ function renderProducts() {
 
   const products = allProducts.filter((product) => {
     const matchesCategory = activeCategory === 'All' || product.category === activeCategory;
+    const matchesPro = !proOnly || product.isPro;
     const matchesSearch = !query || [product.name, product.description, product.category]
       .filter(Boolean)
       .some((value) => value.toLowerCase().includes(query));
-    return matchesCategory && matchesSearch;
+    return matchesCategory && matchesSearch && matchesPro;
   });
 
   if (products.length === 0) {

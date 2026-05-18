@@ -290,6 +290,8 @@ function showSection(section) {
     contact: 'Edit Contact Info',
     social: 'Edit Social Media',
     products: 'Manage Products',
+    orders: 'Manage Orders',
+    subscribers: 'Newsletter Subscribers',
     reviews: 'Manage Reviews',
     members: 'Registered Members',
     announcements: 'Announcements',
@@ -467,6 +469,83 @@ async function deleteContact(id) {
     }
   } catch {
     showMessage('Connection error.', 'error');
+  }
+}
+
+async function loadOrders() {
+  try {
+    const res = await fetch('/api/orders/admin');
+    const data = await res.json();
+    const tbody = document.querySelector('#ordersTable tbody');
+    const empty = document.getElementById('ordersEmpty');
+
+    if (data.success && data.orders.length > 0) {
+      tbody.innerHTML = data.orders.map((order) => `
+        <tr data-id="${order._id}">
+          <td>${escapeHtml(order.customerName)}</td>
+          <td>${escapeHtml(order.customerEmail)}</td>
+          <td>$${order.total.toFixed(2)}</td>
+          <td>${escapeHtml(order.status)}</td>
+          <td>${new Date(order.createdAt).toLocaleDateString()}</td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="updateOrderStatus('${order._id}', 'processing')">Process</button>
+            <button class="btn btn-outline btn-sm" onclick="updateOrderStatus('${order._id}', 'completed')">Complete</button>
+          </td>
+        </tr>
+      `).join('');
+      document.getElementById('ordersTable').style.display = 'table';
+      empty.style.display = 'none';
+    } else {
+      document.getElementById('ordersTable').style.display = 'none';
+      empty.style.display = 'block';
+    }
+  } catch {
+    showMessage('Failed to load orders.', 'error');
+  }
+}
+
+async function updateOrderStatus(id, status) {
+  try {
+    const res = await fetch('/api/orders/' + id + '/status', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadOrders();
+      showMessage('Order status updated.', 'success');
+    } else {
+      showMessage(data.error || 'Failed to update order.', 'error');
+    }
+  } catch {
+    showMessage('Connection error.', 'error');
+  }
+}
+
+async function loadSubscribers() {
+  try {
+    const res = await fetch('/api/newsletter');
+    const data = await res.json();
+    const tbody = document.querySelector('#subscribersTable tbody');
+    const empty = document.getElementById('subscribersEmpty');
+
+    if (data.success && data.subscribers.length > 0) {
+      tbody.innerHTML = data.subscribers.map((sub) => `
+        <tr>
+          <td>${escapeHtml(sub.name || '—')}</td>
+          <td>${escapeHtml(sub.email)}</td>
+          <td>${new Date(sub.createdAt).toLocaleDateString()}</td>
+        </tr>
+      `).join('');
+      document.getElementById('subscribersTable').style.display = 'table';
+      empty.style.display = 'none';
+    } else {
+      document.getElementById('subscribersTable').style.display = 'none';
+      empty.style.display = 'block';
+    }
+  } catch {
+    showMessage('Failed to load subscribers.', 'error');
   }
 }
 
@@ -774,10 +853,12 @@ async function deleteAnnouncement(id) {
   }
 }
 
-// Call initial load for members and announcements
+// Call initial load for members, announcements, orders, and subscribers
 window.addEventListener('DOMContentLoaded', () => {
   loadMembers();
   loadAnnouncements();
+  loadOrders();
+  loadSubscribers();
 });
 
 async function addProduct(product) {

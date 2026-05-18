@@ -31,6 +31,8 @@
           <li><a href="#" data-section="contact"><i class="fas fa-address-book"></i> Contact Info</a></li>
           <li><a href="#" data-section="social"><i class="fas fa-share-alt"></i> Social Media</a></li>
           <li><a href="#" data-section="products"><i class="fas fa-box"></i> Products</a></li>
+          <li><a href="#" data-section="orders"><i class="fas fa-receipt"></i> Orders</a></li>
+          <li><a href="#" data-section="subscribers"><i class="fas fa-envelope-open-text"></i> Subscribers</a></li>
           <li><a href="#" data-section="reviews"><i class="fas fa-star"></i> Reviews</a></li>
           <li><a href="#" data-section="footer"><i class="fas fa-shoe-prints"></i> Footer</a></li>
         </ul>
@@ -284,7 +286,7 @@
 
         <!-- Products -->
         <div class="section-panel" id="panel-products">
-          <div class="section-panel-header"><h3>Manage Products</h3><button class="btn btn-primary btn-sm" onclick="showAddProductModal()">Add Product</button></div>
+          <div class="section-panel-header"><h3>Manage Products</h3><button class="btn btn-primary btn-sm" onclick="showAddProductModal()"><i class="fas fa-plus"></i> Add Product</button></div>
           <div class="section-panel-body">
             <div class="table-wrapper">
               <table class="data-table" id="productsTable">
@@ -303,6 +305,55 @@
             <div class="empty-state" id="productsEmpty">
               <i class="fas fa-box"></i>
               <p>No products yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Orders -->
+        <div class="section-panel" id="panel-orders">
+          <div class="section-panel-header"><h3>Orders</h3></div>
+          <div class="section-panel-body">
+            <div class="table-wrapper">
+              <table class="data-table" id="ordersTable">
+                <thead>
+                  <tr>
+                    <th>Customer</th>
+                    <th>Email</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="ordersEmpty">
+              <i class="fas fa-receipt"></i>
+              <p>No orders yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Subscribers -->
+        <div class="section-panel" id="panel-subscribers">
+          <div class="section-panel-header"><h3>Newsletter Subscribers</h3></div>
+          <div class="section-panel-body">
+            <div class="table-wrapper">
+              <table class="data-table" id="subscribersTable">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Subscribed</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="empty-state" id="subscribersEmpty">
+              <i class="fas fa-envelope-open-text"></i>
+              <p>No subscribers yet.</p>
             </div>
           </div>
         </div>

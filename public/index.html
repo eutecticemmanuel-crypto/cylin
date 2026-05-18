@@ -31,6 +31,11 @@
         <li><a href="#contact" class="nav-link">Contact</a></li>
         <li><a href="/products" class="nav-link">Products</a></li>
         <li><a href="/admin" class="nav-link admin-link"><i class="fas fa-cog"></i> Admin</a></li>
+        <li>
+          <button type="button" id="contrastToggle" class="contrast-toggle" aria-label="Toggle high contrast">
+            <i class="fas fa-adjust" aria-hidden="true"></i>
+          </button>
+        </li>
       </ul>
     </div>
   </nav>
@@ -39,6 +44,61 @@
   <section class="hero" id="home">
     <canvas id="wallpaperCanvas"></canvas>
     <div class="hero-overlay"></div>
+
+    <!-- Pro Moodboard Widget -->
+    <div class="moodboard-widget" id="moodboard" aria-label="Color moodboard">
+      <div class="moodboard-header">
+        <div>
+          <div class="moodboard-title">Color Moodboard</div>
+          <div class="moodboard-subtitle">Preview a designer palette in seconds</div>
+        </div>
+        <button type="button" class="moodboard-min" id="moodboardMin" aria-label="Minimize moodboard">
+          <i class="fas fa-minus" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <div class="moodboard-controls">
+        <div class="moodboard-field">
+          <label for="moodVibe">Style vibe</label>
+          <select id="moodVibe" aria-label="Select style vibe">
+            <option value="luxury">Luxury</option>
+            <option value="modern">Modern</option>
+            <option value="calm">Calm</option>
+            <option value="warm">Warm</option>
+            <option value="eco">Eco</option>
+          </select>
+        </div>
+
+        <div class="moodboard-field">
+          <label for="moodWallTone">Wall tone</label>
+          <select id="moodWallTone" aria-label="Select wall tone">
+            <option value="neutral" selected>Neutral</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+            <option value="warm">Warm</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="moodboard-swatches" id="moodSwatches" aria-label="Generated palette swatches"></div>
+
+      <div class="moodboard-actions">
+        <button type="button" class="btn btn-primary moodboard-apply" id="moodApply">
+          <i class="fas fa-wand-magic-sparkles" aria-hidden="true"></i> Apply
+        </button>
+        <button type="button" class="btn btn-outline moodboard-save" id="moodSave">
+          <i class="fas fa-save" aria-hidden="true"></i> Save
+        </button>
+        <button type="button" class="btn btn-outline moodboard-reset" id="moodReset">
+          <i class="fas fa-undo" aria-hidden="true"></i> Reset
+        </button>
+      </div>
+
+      <div class="moodboard-hint">
+        Tip: click a swatch to copy its hex value.
+      </div>
+    </div>
+
     <div class="hero-content">
       <h1 class="hero-title" data-content="hero.title">Transform Your Space<br>With Color</h1>
       <p class="hero-subtitle" data-content="hero.subtitle">Premium residential & commercial painting services that bring your vision to life with precision and artistry.</p>
@@ -46,7 +106,11 @@
         <a href="#contact" class="btn btn-primary" data-content="hero.primaryButton">Get a Free Quote</a>
         <a href="#gallery" class="btn btn-outline" data-content="hero.secondaryButton">View Our Work</a>
       </div>
+      <div class="hero-cta-a11y" aria-hidden="true">
+        {/* design-only */}
+      </div>
     </div>
+
     <div class="scroll-indicator">
       <div class="mouse">
         <div class="wheel"></div>
@@ -64,42 +128,42 @@
         <p class="section-desc" data-content="services.description">From cozy homes to grand commercial spaces, we deliver flawless finishes every time.</p>
       </div>
       <div class="services-grid">
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-home"></i>
           </div>
           <h3>Residential Painting</h3>
           <p>Interior and exterior painting for homes, apartments, and condos. We treat your home with the care it deserves.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-building"></i>
           </div>
           <h3>Commercial Painting</h3>
           <p>Offices, retail stores, warehouses, and industrial facilities. Minimal disruption to your business operations.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-couch"></i>
           </div>
           <h3>Interior Painting</h3>
           <p>Walls, ceilings, trim, cabinets, and specialty finishes. Color consultation included with every project.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-sun"></i>
           </div>
           <h3>Exterior Painting</h3>
           <p>Siding, stucco, decks, fences, and more. Weather-resistant coatings that stand the test of time.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-palette"></i>
           </div>
           <h3>Custom Finishes</h3>
           <p>Textured walls, faux finishes, accent walls, murals, and decorative painting for unique spaces.</p>
         </div>
-        <div class="service-card">
+        <div class="service-card" data-reveal>
           <div class="service-icon">
             <i class="fas fa-tools"></i>
           </div>
@@ -161,56 +225,56 @@
         <p class="section-desc" data-content="gallery.description">Browse through our completed projects and imagine the possibilities for your space.</p>
       </div>
       <div class="gallery-grid">
-        <div class="gallery-item" data-index="0">
+        <div class="gallery-item" data-index="0" data-reveal>
           <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="Modern living room with accent wall" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Modern Living Room</span>
             <span class="gallery-category">Interior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="1">
+        <div class="gallery-item" data-index="1" data-reveal>
           <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80" alt="Elegant bedroom with soft tones" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Elegant Bedroom</span>
             <span class="gallery-category">Interior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="2">
+        <div class="gallery-item" data-index="2" data-reveal>
           <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&q=80" alt="Kitchen with fresh paint" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Fresh Kitchen</span>
             <span class="gallery-category">Interior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="3">
+        <div class="gallery-item" data-index="3" data-reveal>
           <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&q=80" alt="Bathroom renovation" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Bathroom Refresh</span>
             <span class="gallery-category">Interior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="4">
+        <div class="gallery-item" data-index="4" data-reveal>
           <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&q=80" alt="Exterior house painting" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Exterior Facade</span>
             <span class="gallery-category">Exterior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="5">
+        <div class="gallery-item" data-index="5" data-reveal>
           <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&q=80" alt="Office space painting" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Office Space</span>
             <span class="gallery-category">Commercial</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="6">
+        <div class="gallery-item" data-index="6" data-reveal>
           <img src="https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&q=80" alt="Dining room with bold colors" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Bold Dining Room</span>
             <span class="gallery-category">Interior</span>
           </div>
         </div>
-        <div class="gallery-item" data-index="7">
+        <div class="gallery-item" data-index="7" data-reveal>
           <img src="https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&q=80" alt="Retail store interior" loading="lazy">
           <div class="gallery-overlay">
             <span class="gallery-title">Retail Store</span>
@@ -240,14 +304,14 @@
   <section class="about" id="about">
     <div class="container">
       <div class="about-grid">
-        <div class="about-image">
+        <div class="about-image" data-reveal>
           <img src="https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=800&q=80" alt="Professional painter at work" data-content="about.image">
           <div class="about-experience">
             <span class="exp-number" data-content="about.experience.number">15+</span>
             <span class="exp-text" data-content="about.experience.text">Years of<br>Experience</span>
           </div>
         </div>
-        <div class="about-content">
+        <div class="about-content" data-reveal>
           <span class="section-tag" data-content="about.tag">About Us</span>
           <h2 class="section-title" data-content="about.title">Bringing Color to Life Since 2009</h2>
           <p>Cylin Painters is a full-service painting company dedicated to transforming spaces with color, creativity, and craftsmanship. Founded on the principles of quality, integrity, and customer satisfaction, we have grown to become one of the most trusted names in the industry.</p>
@@ -279,19 +343,19 @@
   <section class="stats">
     <div class="container">
       <div class="stats-grid">
-        <div class="stat-item">
+        <div class="stat-item" data-reveal>
           <span class="stat-number" data-target="1200">0</span>
           <span class="stat-label">Projects Completed</span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item" data-reveal>
           <span class="stat-number" data-target="850">0</span>
           <span class="stat-label">Happy Clients</span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item" data-reveal>
           <span class="stat-number" data-target="25">0</span>
           <span class="stat-label">Expert Painters</span>
         </div>
-        <div class="stat-item">
+        <div class="stat-item" data-reveal>
           <span class="stat-number" data-target="15">0</span>
           <span class="stat-label">Years Experience</span>
         </div>
@@ -308,7 +372,7 @@
         <p class="section-desc" data-content="contact.description">Ready to transform your space? Fill out the form below and we'll get back to you within 24 hours.</p>
       </div>
       <div class="contact-grid">
-        <div class="contact-info">
+        <div class="contact-info" data-reveal>
           <div class="info-card">
             <div class="info-icon">
               <i class="fas fa-map-marker-alt"></i>
@@ -342,7 +406,8 @@
             <a href="https://pin.it/2reyO8vPo" aria-label="Pinterest" target="_blank" rel="noopener"><i class="fab fa-pinterest-p"></i></a>
           </div>
         </div>
-        <form class="contact-form" id="contactForm">
+
+        <form class="contact-form" id="contactForm" data-reveal>
           <div class="form-group">
             <label for="name">Full Name *</label>
             <input type="text" id="name" name="name" required placeholder="John Doe">
@@ -434,6 +499,7 @@
   </footer>
 
   <script src="js/wallpaper.js"></script>
+  <script src="js/moodboard.js"></script>
   <script src="js/main.js"></script>
   <script src="js/content-loader.js"></script>
 </body>

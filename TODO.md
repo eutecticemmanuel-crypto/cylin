@@ -38,3 +38,21 @@
 - [x] Seed the database
 - [x] Server starts successfully
 
+# TODO: Pro Aesthetic Upgrades (new)
+
+## 1) Color Moodboard designer preview
+- [ ] Add moodboard widget markup to public/index.html
+- [ ] Add public/js/moodboard.js (palette + apply CSS variables)
+- [ ] Add CSS for moodboard + palette swatches to public/css/styles.css
+- [ ] Wire initialization in public/index.html / public/js/main.js
+
+## 2) Signature Style scroll reveal
+- [ ] Enhance scroll reveal behavior in public/js/main.js
+- [ ] Extend CSS reveal transitions in public/css/styles.css
+- [ ] Add data-reveal attributes or activate reveal on existing sections
+
+## 3) Accessibility/Contrast mode toggle
+- [ ] Add toggle markup to public/index.html (and optional store page)
+- [ ] Add theme CSS classes to public/css/styles.css
+- [ ] Persist toggle in public/js/main.js (localStorage)
+

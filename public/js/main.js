@@ -216,17 +216,39 @@ document.addEventListener('DOMContentLoaded', function () {
   /* ---------- Newsletter Form ---------- */
   const newsletterForm = document.getElementById('newsletterForm');
   if (newsletterForm) {
-    newsletterForm.addEventListener('submit', (e) => {
+    newsletterForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+      const formData = new FormData(newsletterForm);
+      const email = formData.get('email');
+      const name = formData.get('name');
       const btn = newsletterForm.querySelector('button');
-      const originalHTML = btn.innerHTML;
-      btn.innerHTML = '<i class="fas fa-check"></i>';
-      btn.style.background = '#22c55e';
-      setTimeout(() => {
-        btn.innerHTML = originalHTML;
-        btn.style.background = '';
+      const messageNode = document.createElement('div');
+      messageNode.className = 'form-message';
+
+      try {
+        btn.disabled = true;
+        const response = await fetch('/api/newsletter', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, name })
+        });
+        const result = await response.json();
+
+        messageNode.textContent = result.message || (result.success ? 'Subscribed successfully.' : 'Unable to subscribe.');
+        messageNode.className = `form-message ${result.success ? 'success' : 'error'}`;
+      } catch (err) {
+        messageNode.textContent = 'Subscription failed. Please try again.';
+        messageNode.className = 'form-message error';
+      } finally {
+        btn.disabled = false;
+        const existingMessage = newsletterForm.querySelector('.form-message');
+        if (existingMessage) existingMessage.remove();
+        newsletterForm.appendChild(messageNode);
+      }
+
+      if (messageNode.classList.contains('success')) {
         newsletterForm.reset();
-      }, 2000);
+      }
     });
   }
 

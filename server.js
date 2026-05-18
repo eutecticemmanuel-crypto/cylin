@@ -12,6 +12,8 @@ const customerRoutes = require('./routes/customer');
 const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const adminRoutes = require('./routes/admin');
+const newsletterRoutes = require('./routes/newsletter');
+const orderRoutes = require('./routes/order');
 const User = require('./models/User');
 const adminCredentials = require('./config/adminCredentials');
 
@@ -83,7 +85,13 @@ app.use('/api/content', contentRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/orders', orderRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 app.use('/api/admin', adminRoutes);
+
+app.get('/checkout', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'checkout.html'));
+});
 
 // Fallback: serve index.html for any non-API route
 app.get('*', (req, res) => {
