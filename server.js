@@ -22,6 +22,7 @@ const adminCredentials = require('./config/adminCredentials');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/cylin';
 
 async function ensureDefaultAdmin() {
   try {
@@ -46,21 +47,26 @@ async function ensureDefaultAdmin() {
   }
 }
 
-// Connect to MongoDB and ensure sample data is seeded
-connectDB()
-  .then(async () => {
+async function startApp() {
+  try {
+    await connectDB();
     await ensureDefaultAdmin();
     await seedDatabase();
-  })
-  .catch((err) => {
+
+    app.listen(PORT, () => {
+      console.log(`Cylin Painters server running on http://localhost:${PORT}`);
+    });
+  } catch (err) {
     console.error('Startup error:', err);
-  });
+    process.exit(1);
+  }
+}
 
 // Session middleware
 app.use(session({
   secret: process.env.SESSION_SECRET || 'default-secret',
-  store: MongoStore.create({
-    mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost:27017/cylin',
+  store: new MongoStore({
+    mongoUrl: MONGO_URI,
     ttl: 60 * 60 * 24, // 1 day
   }),
   resave: false,
@@ -113,7 +119,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`Cylin Painters server running on http://localhost:${PORT}`);
+// Start application
+startApp().catch(err => {
+  console.error('Fatal error starting app:', err);
+  process.exit(1);
 });
 
