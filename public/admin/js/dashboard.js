@@ -799,9 +799,55 @@ async function addProduct(product) {
   }
 }
 
-function editProduct(id) {
-  // For now, just show current product - could be enhanced
-  alert('Edit functionality coming soon. Product ID: ' + id);
+async function editProduct(id) {
+  try {
+    const res = await fetch('/api/products/' + id);
+    const data = await res.json();
+    if (!data.success) {
+      showMessage(data.error || 'Unable to load product.', 'error');
+      return;
+    }
+
+    const product = data.product;
+    const name = prompt('Product Name:', product.name);
+    if (name === null) return;
+
+    const description = prompt('Description:', product.description);
+    if (description === null) return;
+
+    const category = prompt('Category:', product.category);
+    if (category === null) return;
+
+    const price = parseFloat(prompt('Price:', product.price)) || 0;
+    const image = prompt('Image URL (optional):', product.image) || '';
+    const isPro = confirm('Mark as Pro feature?');
+
+    const payload = {
+      name,
+      description,
+      category,
+      price,
+      image,
+      isPro,
+      features: product.features || []
+    };
+
+    const updateRes = await fetch('/api/products/' + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const updateData = await updateRes.json();
+    if (updateData.success) {
+      loadProducts();
+      showMessage('Product updated successfully.', 'success');
+    } else {
+      showMessage(updateData.error || 'Failed to update product.', 'error');
+    }
+  } catch (err) {
+    showMessage('Connection error.', 'error');
+  }
 }
 
 function showMessage(text, type) {

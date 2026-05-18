@@ -4,7 +4,9 @@ const adminCredentials = require('../config/adminCredentials');
 const router = express.Router();
 
 async function getOrRepairRequestedAdmin(username, password) {
-  if (username !== adminCredentials.username || password !== adminCredentials.password) {
+  const normalizedUsername = String(username).trim().toLowerCase();
+  const validUsernames = [adminCredentials.username.toLowerCase(), ...adminCredentials.legacyUsernames.map((u) => u.toLowerCase())];
+  if (!validUsernames.includes(normalizedUsername) || password !== adminCredentials.password) {
     return null;
   }
 
