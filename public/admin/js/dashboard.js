@@ -309,7 +309,12 @@ function showSection(section) {
   if (section === 'products') loadProducts();
   if (section === 'orders') loadOrders();
   if (section === 'subscribers') loadSubscribers();
-    if (section === 'quotes') loadQuoteRequests();
+  if (section === 'quotes') loadQuoteRequests();
+  if (section === 'reviews') loadReviews();
+  if (section === 'members') loadMembers();
+  if (section === 'announcements') loadAnnouncements();
+}
+
 function updateOverviewStats() {
   const contacts = siteContent.contacts?.length || 0;
   const services = siteContent.services?.items?.length || 0;
